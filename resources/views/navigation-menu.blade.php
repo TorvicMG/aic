@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+<nav x-data="{ open: false , show: localStorage.dark == 1 ? true: false, toggle() { this.show = !this.show } }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -75,71 +75,104 @@
                 @endif
 
                 <!-- Settings Dropdown -->
-                <div class="ms-3 relative">
-                    <x-dropdown align="right" width="48">
-                        <x-slot name="trigger">
-                            @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                                <button
-                                    class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
-                                    @if (Auth::user()->profile_photo_path)
-                                        <img class="h-8 w-8 rounded-full object-cover"
-                                            src="/storage/{{ Auth::user()->profile_photo_path }}"
-                                            alt="{{ Auth::user()->name }}" />
-                                    @else
-                                        <img class="h-8 w-8 rounded-full object-cover"
-                                            src="{{ Auth::user()->profile_photo_url }}"
-                                            alt="{{ Auth::user()->name }}" />
-                                    @endif
-                                </button>
-                            @else
-                                <span class="inline-flex rounded-md">
-                                    <button type="button"
-                                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
-                                        {{ Auth::user()->name }}
-
-                                        <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                        </svg>
+                <div class="hidden sm:flex sm:items-center sm:ms-6">
+                    <!-- Selector de tema oscuro -->
+                    <div class="mr-2">
+                        <svg id="moon" class="setMode h-4 w-4 text-gray-400 hover:text-gray-500 cursor-pointer"
+                            fill="none" @click="toggle" :class="{ 'block': !show, 'hidden': show }" x-cloak
+                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                        <svg id="sun" class="setMode h-5 w-5 text-yellow-200 hover:text-yellow-300 cursor-pointer"
+                            fill="none" @click="toggle" :class="{ 'hidden': !show, 'block': show }" x-cloak
+                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </div>
+                    <div class="ms-3 relative">
+                        <x-dropdown align="right" width="48">
+                            <x-slot name="trigger">
+                                @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
+                                    <button
+                                        class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
+                                        @if (Auth::user()->profile_photo_path)
+                                            <img class="h-8 w-8 rounded-full object-cover"
+                                                src="/storage/{{ Auth::user()->profile_photo_path }}"
+                                                alt="{{ Auth::user()->name }}" />
+                                        @else
+                                            <img class="h-8 w-8 rounded-full object-cover"
+                                                src="{{ Auth::user()->profile_photo_url }}"
+                                                alt="{{ Auth::user()->name }}" />
+                                        @endif
                                     </button>
-                                </span>
-                            @endif
-                        </x-slot>
+                                @else
+                                    <span class="inline-flex rounded-md">
+                                        <button type="button"
+                                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
+                                            {{ Auth::user()->name }}
 
-                        <x-slot name="content">
-                            <!-- Account Management -->
-                            <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Manage Account') }}
-                            </div>
+                                            <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                                fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                            </svg>
+                                        </button>
+                                    </span>
+                                @endif
+                            </x-slot>
 
-                            <x-dropdown-link href="{{ route('profile.show') }}">
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
+                            <x-slot name="content">
+                                <!-- Account Management -->
+                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                    {{ __('Manage Account') }}
+                                </div>
 
-                            @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                                <x-dropdown-link href="{{ route('api-tokens.index') }}">
-                                    {{ __('API Tokens') }}
+                                <x-dropdown-link href="{{ route('profile.show') }}">
+                                    {{ __('Profile') }}
                                 </x-dropdown-link>
-                            @endif
 
-                            <div class="border-t border-gray-200 dark:border-gray-600"></div>
+                                @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
+                                    <x-dropdown-link href="{{ route('api-tokens.index') }}">
+                                        {{ __('API Tokens') }}
+                                    </x-dropdown-link>
+                                @endif
 
-                            <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}" x-data>
-                                @csrf
+                                <div class="border-t border-gray-200 dark:border-gray-600"></div>
 
-                                <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
-                                    {{ __('Log Out') }}
-                                </x-dropdown-link>
-                            </form>
-                        </x-slot>
-                    </x-dropdown>
+                                <!-- Authentication -->
+                                <form method="POST" action="{{ route('logout') }}" x-data>
+                                    @csrf
+
+                                    <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
+                                        {{ __('Log Out') }}
+                                    </x-dropdown-link>
+                                </form>
+                            </x-slot>
+                        </x-dropdown>
+                    </div>
                 </div>
             </div>
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
+                <!-- Selector de tema oscuro -->
+                <div class="mr-2">
+                    <svg id="moon" class="setMode h-4 w-4 text-gray-400 hover:text-gray-500 cursor-pointer"
+                        fill="none" @click="toggle" :class="{ 'block': !show, 'hidden': show }" x-cloak
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <svg id="sun" class="setMode h-5 w-5 text-yellow-200 hover:text-yellow-300 cursor-pointer"
+                        fill="none" @click="toggle" :class="{ 'hidden': !show, 'block': show }" x-cloak
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </div>
                 <button @click="open = ! open"
                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -172,8 +205,8 @@
                                 src="/storage/{{ Auth::user()->profile_photo_path }}"
                                 alt="{{ Auth::user()->name }}" />
                         @else
-                            <img class="h-8 w-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}"
-                                alt="{{ Auth::user()->name }}" />
+                            <img class="h-8 w-8 rounded-full object-cover"
+                                src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                         @endif
                     </div>
                 @endif
