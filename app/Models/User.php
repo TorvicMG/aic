@@ -29,6 +29,17 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'company_id',
+        'employee_number',
+        'employee_category_id',
+        'blood_type_id',
+        'allergies',
+        'curp',
+        'rfc',
+        'phone_number',
+        'emergency_contact_name',
+        'emergency_contact_phone',
+        'signature',
     ];
 
     /**
@@ -60,4 +71,16 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function companies(){
+        return $this->belongsToMany(Company::class);
+    }
+
+    public function employeeTypes(){
+        return $this->belongsToMany(EmployeeType::class);
+    }
+
+    public function bloodTypes(){
+        return $this->belongsToMany(BloodType::class);
+    }
 }

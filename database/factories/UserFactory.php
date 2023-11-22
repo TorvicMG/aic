@@ -30,6 +30,17 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
             'current_team_id' => null,
+            'company_id' => $this->faker->randomElements(['1', '2', '3']),
+            'employee_number' => null,
+            'employee_category_id' => $this->faker->randomElements(['1', '2', '3', '4']),
+            'blood_type_id' => $this->faker->randomElements(['1', '2', '3', '4', '5', '6', '7', '8']),
+            'allergies' => $this->faker->randomElements(['Ninguna', 'Papas', 'Mariscos']),
+            'curp' => $this->faker->text(18),
+            'rfc' => $this->faker->text(13),
+            'phone_number' => $this->faker->e164PhoneNumber(),
+            'emergency_contact_name' => $this->faker->name(),
+            'emergency_contact_phone' => $this->faker->e164PhoneNumber(),
+            'signature' => $this->faker->name(),
         ];
     }
 
