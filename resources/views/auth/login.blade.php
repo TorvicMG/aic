@@ -14,7 +14,7 @@
 
         <!-- Selector de tema oscuro -->
         <div class="grid justify-items-end dark:bg-gray-800">
-            <div class=" mr-2 mt-2" x-data="{ open: false, show: localStorage.dark == 1 ? true : false, toggle() { this.show = !this.show } }">
+            <div class="mr-2 mt-2 rounded-md" x-data="{ open: false, show: localStorage.dark == 1 ? true : false, toggle() { this.show = !this.show } }">
                 <svg id="moon" class="setMode h-4 w-4 text-gray-400 hover:text-gray-500 cursor-pointer" fill="none"
                     @click="toggle" :class="{ 'block': !show, 'hidden': show }" x-cloak xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24" stroke="currentColor">
